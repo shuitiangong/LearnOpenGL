@@ -365,6 +365,7 @@ int main(int argc, char *argv[]) {
             //trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0, 0, 1));
             glm::mat4 model(1.0f);
             model = glm::scale(model, glm::vec3(3.0f));
+            model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1, 1, 1));
             //model = glm::translate(model, cubePositions[i]);
             //model = glm::rotate(model, (float)(0), glm::vec3(1, 0.3, 0.5));
             glm::mat4 view = camera.GetViewMatrix();
