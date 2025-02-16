@@ -266,20 +266,6 @@ int main(int argc, char *argv[]) {
     else {
         cout << "load texture faild!" << endl;
     }
-    
-    Shader shader("./shader/vertex.glsl", "./shader/fragment.glsl");
-
-    shader.use();
-    shader.setInt("material.diffuse", 0);
-    shader.setInt("material.specular", 1);
-    shader.setInt("material.emission", 2);
-    shader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-    shader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f);
-    shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-    //shader.setVec3("material.ambient",  1.0f, 0.5f, 0.31f);
-    //shader.setVec3("material.diffuse",  1.0f, 0.5f, 0.31f);
-    //shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    shader.setFloat("material.shininese", 32.0f);
 
     unsigned int lightVAO;
     glGenVertexArrays(1, &lightVAO);
@@ -338,6 +324,22 @@ int main(int argc, char *argv[]) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
+
+    Shader shader("./shader/vertex.glsl", "./shader/fragment.glsl");
+
+    shader.use();
+    shader.setInt("material.diffuse", 0);
+    shader.setInt("material.specular", 1);
+    shader.setInt("material.emission", 2);
+    shader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
+    shader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f);
+    shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+    //shader.setVec3("material.ambient",  1.0f, 0.5f, 0.31f);
+    //shader.setVec3("material.diffuse",  1.0f, 0.5f, 0.31f);
+    //shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    shader.setFloat("material.shininese", 32.0f);
+    shader.setVec3("objectColor", 1.0f, 1.0f, 1.0f);
+
     Shader lightShader("./shader/vertexLight.glsl", "./shader/fragmentLight.glsl");
     //unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
 
@@ -397,7 +399,6 @@ int main(int argc, char *argv[]) {
         transformLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(projection));
         shader.setVec3("lightPos", lightPos);
-        shader.setVec3("objectColor", 1.0f, 1.0f, 1.0f);
         shader.setVec3("lightColor",  lightColor);
         shader.setVec3("viewPos", camera.Position);
         glBindVertexArray(VAO);
