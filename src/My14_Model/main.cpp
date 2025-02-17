@@ -239,8 +239,8 @@ int main(int argc, char *argv[]) {
         lightingShader.setVec3(value_name + "].specular", 1.0f, 1.0f, 1.0f);
     }
 
-    lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+    lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(7.5f)));
+    lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(12.5f)));
     lightingShader.setFloat("spotLight.constant", 1.0f);
     lightingShader.setFloat("spotLight.linear", 0.09f);
     lightingShader.setFloat("spotLight.quadratic", 0.032f);
@@ -251,8 +251,8 @@ int main(int argc, char *argv[]) {
     lightingShader.setVec3("spotLight.diffuse", 0.8f, 0.8f, 0.8f);
     lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
 
-    // lightCubeShader.use();
-    // lightCubeShader.setVec3("lightColor", glm::vec3(1.0f));
+    lightCubeShader.use();
+    lightCubeShader.setVec3("lightColor", glm::vec3(1.0f));
 
     glm::vec3 pointLightPositions[] = {
         glm::vec3( 0.7f,  0.2f,  2.0f),
@@ -283,16 +283,16 @@ int main(int argc, char *argv[]) {
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.use();
-        // lightingShader.setVec3("dirLight.direction", camera.Front);
-        // for (int i = 0; i<4; ++i) {
-        //     string value_name = "pointLights[";
-        //     value_name += i+'0';
-        //     value_name = value_name + "].position";
-        //     lightingShader.setVec3(value_name, camera.Position);
-        // }
-        // lightingShader.setVec3("spotLight.position", camera.Position);
-        // lightingShader.setVec3("spotLight.direction", camera.Front);
-        // lightingShader.setVec3("viewPos", camera.Position);
+        lightingShader.setVec3("dirLight.direction", camera.Front);
+        for (int i = 0; i<4; ++i) {
+            string value_name = "pointLights[";
+            value_name += i+'0';
+            value_name = value_name + "].position";
+            lightingShader.setVec3(value_name, camera.Position);
+        }
+        lightingShader.setVec3("spotLight.position", camera.Position);
+        lightingShader.setVec3("spotLight.direction", camera.Front);
+        lightingShader.setVec3("viewPos", camera.Position);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3(0.1f));
@@ -304,18 +304,18 @@ int main(int argc, char *argv[]) {
         lightingShader.setMat4("projection", projection);
         ourModel.Draw(lightingShader);
 
-        // glBindVertexArray(lightCubeVAO);
+        glBindVertexArray(lightCubeVAO);
 
-        // lightCubeShader.use();
-        // lightCubeShader.setMat4("view", view);
-        // lightCubeShader.setMat4("projection", projection);
-        // for (int i = 0; i<4; ++i) {
-        //     glm::mat4 model = glm::mat4(1.0f);
-        //     model = glm::translate(model, pointLightPositions[i]);
-        //     model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        //     lightCubeShader.setMat4("model", model);
-        //     glDrawArrays(GL_TRIANGLES, 0, 36);
-        // }
+        lightCubeShader.use();
+        lightCubeShader.setMat4("view", view);
+        lightCubeShader.setMat4("projection", projection);
+        for (int i = 0; i<4; ++i) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, pointLightPositions[i]);
+            model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+            lightCubeShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

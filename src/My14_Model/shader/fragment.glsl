@@ -90,8 +90,6 @@ vec3 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 fragPos, vec3 viewDir)
     
     // check if lighting is inside the spotlight cone
     float theta = dot(lightDir, normalize(-spotLight.direction)); 
-    float epsilon = spotLight.cutOff - spotLight.outerCutOff;
-    float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);
 
     // remember that we're working with angles as cosines instead of degrees so a '>' is used.    
     if(theta > spotLight.outerCutOff) {
@@ -114,13 +112,15 @@ vec3 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 fragPos, vec3 viewDir)
         // ambient  *= attenuation; // remove attenuation from ambient, as otherwise at large distances the light would be darker inside than outside the spotlight due the ambient term in the else branch
         diffuse  *= attenuation;
         specular *= attenuation;   
-            
-        vec3 result = ambient + (diffuse + specular) * vec3(10.0f) * intensity;
-        return result;
+
+        float epsilon = spotLight.cutOff - spotLight.outerCutOff;
+        float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);            
+        vec3 result = ambient + (diffuse + specular) * intensity;
+        return result * vec3(1.0f, 0.0f, 0.0f) * 5;
     }
     else {
         // else, use ambient light so scene isn't completely dark outside the spotlight.
-        return spotLight.ambient * texture(material.texture_diffuse0, TexCoords).rgb;
+        return spotLight.ambient * texture(material.texture_diffuse0, TexCoords).rgb * vec3(0.0f, 1.0f, 0.0f) * 5;
     }
 }
 
